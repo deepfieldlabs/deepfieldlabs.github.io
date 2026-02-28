@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AstroLens — AI-Powered Astronomical Image Anomaly Detection | DeepField Labs</title>
+<meta name="description" content="AstroLens: AI-powered astronomical image anomaly detection. Vision Transformers, YOLO transient detection, and autonomous multi-day streaming discovery.">
+<meta name="author" content="Saman Tabatabaeian">
+<meta property="og:title" content="AstroLens — AI-Powered Astronomical Image Anomaly Detection">
+<meta property="og:description" content="End-to-end intelligent pipeline from raw sky survey data to actionable discovery reports. 22,195 images analyzed, 269 known objects recovered.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="">
+<meta property="og:url" content="">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AstroLens — AI-Powered Astronomical Image Anomaly Detection">
+<meta name="twitter:description" content="End-to-end intelligent pipeline from raw sky survey data to actionable discovery reports.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-primary:#0a0e1a;
+  --bg-secondary:#0f1525;
+  --bg-card:rgba(15,21,37,.55);
+  --border-card:rgba(77,166,255,.12);
+  --text-primary:#e8edf5;
+  --text-secondary:#8b95a8;
+  --text-muted:#5a6478;
+  --accent-blue:#4da6ff;
+  --accent-purple:#7c3aed;
+  --accent-gradient:linear-gradient(135deg,#4da6ff,#7c3aed);
+  --glass-bg:rgba(15,21,37,.65);
+  --glass-border:rgba(77,166,255,.1);
+  --glass-shadow:0 8px 32px rgba(0,0,0,.3);
+  --radius:12px;
+  --radius-lg:20px;
+  --transition:0.3s cubic-bezier(.4,0,.2,1);
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background:var(--bg-primary);
+  color:var(--text-primary);
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent-blue);text-decoration:none;transition:color var(--transition)}
+a:hover{color:#7cb8ff}
+img{max-width:100%;display:block}
+
+.container{width:100%;max-width:1140px;margin:0 auto;padding:0 24px}
+
+/* ---- Header ---- */
+.site-header{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  padding:16px 0;
+  background:rgba(10,14,26,.8);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(77,166,255,.06);
+  transition:background var(--transition),box-shadow var(--transition);
+}
+.site-header.scrolled{background:rgba(10,14,26,.95);box-shadow:0 4px 30px rgba(0,0,0,.4)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;max-width:1140px;margin:0 auto;padding:0 24px}
+.logo{font-size:1.25rem;font-weight:700;letter-spacing:-.02em;color:var(--text-primary)}
+.logo span{background:var(--accent-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+nav{display:flex;align-items:center;gap:28px}
+nav a{color:var(--text-secondary);font-size:.875rem;font-weight:500;transition:color var(--transition)}
+nav a:hover{color:var(--text-primary)}
+.nav-toggle{display:none;background:none;border:none;color:var(--text-primary);cursor:pointer;padding:4px}
+.nav-toggle svg{width:24px;height:24px}
+
+/* ---- Products Dropdown ---- */
+.products-dropdown{position:relative}
+.products-dropdown>a{cursor:pointer}
+.products-dropdown::after{content:'';position:absolute;top:100%;left:0;right:0;height:16px}
+.products-dropdown-menu{
+  display:none;position:absolute;top:100%;left:0;
+  background:rgba(10,14,26,.95);
+  border:1px solid rgba(77,166,255,.1);
+  border-radius:8px;padding:16px 0 8px 0;
+  min-width:180px;
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  z-index:1001;
+}
+.products-dropdown:hover .products-dropdown-menu{display:block}
+.products-dropdown-menu a{display:block;padding:8px 20px;color:var(--text-secondary);font-size:.875rem}
+.products-dropdown-menu a:hover{background:rgba(77,166,255,.06);color:var(--text-primary)}
+.products-dropdown-menu a.active{color:var(--accent-blue)}
+
+/* ---- Hero ---- */
+.hero{
+  position:relative;
+  min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  padding:120px 24px 80px;
+  overflow:hidden;
+}
+.starfield{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.star{
+  position:absolute;
+  width:2px;height:2px;
+  background:#fff;
+  border-radius:50%;
+  animation:twinkle var(--dur,4s) ease-in-out infinite alternate;
+  opacity:0;
+}
+@keyframes twinkle{
+  0%{opacity:.1;transform:scale(.8)}
+  50%{opacity:var(--peak,.8)}
+  100%{opacity:.15;transform:scale(1.1)}
+}
+.hero-content{position:relative;z-index:1;text-align:center;max-width:820px}
+.hero-content h1{
+  font-size:clamp(2.5rem,6vw,4.25rem);
+  font-weight:800;
+  line-height:1.1;
+  letter-spacing:-.03em;
+  margin-bottom:16px;
+}
+.hero-content h1 .gradient{background:var(--accent-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-subtitle{font-size:clamp(1rem,2.5vw,1.25rem);color:var(--text-secondary);line-height:1.7;margin-bottom:12px;max-width:680px;margin-left:auto;margin-right:auto}
+.hero-sub2{font-size:.95rem;color:var(--text-muted);margin-bottom:40px;font-weight:500;letter-spacing:.02em}
+.hero-ctas{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.hero-logo{max-height:120px;margin:0 auto 32px;filter:drop-shadow(0 0 30px rgba(77,166,255,.2))}
+.version-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 18px;border-radius:100px;
+  font-size:.8rem;font-weight:600;
+  background:rgba(34,197,94,.12);color:#22c55e;
+  border:1px solid rgba(34,197,94,.2);
+  margin-bottom:32px;
+}
+
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 28px;
+  border-radius:var(--radius);
+  font-size:.9375rem;font-weight:600;
+  transition:all var(--transition);
+  cursor:pointer;border:none;
+  font-family:inherit;
+}
+.btn-primary{
+  background:var(--accent-gradient);
+  color:#fff;
+  box-shadow:0 4px 20px rgba(77,166,255,.25);
+}
+.btn-primary:hover{box-shadow:0 6px 30px rgba(77,166,255,.4);transform:translateY(-2px);color:#fff}
+.btn-secondary{
+  background:transparent;
+  color:var(--text-primary);
+  border:1px solid rgba(77,166,255,.25);
+}
+.btn-secondary:hover{border-color:var(--accent-blue);background:rgba(77,166,255,.06);color:#fff;transform:translateY(-2px)}
+.btn svg{width:18px;height:18px;flex-shrink:0}
+
+/* ---- Sections ---- */
+section{padding:100px 0}
+.section-label{
+  font-size:.75rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:.12em;
+  color:var(--accent-blue);
+  margin-bottom:12px;
+}
+.section-title{
+  font-size:clamp(1.75rem,4vw,2.75rem);
+  font-weight:800;letter-spacing:-.03em;
+  line-height:1.15;margin-bottom:16px;
+}
+.section-desc{color:var(--text-secondary);font-size:1.05rem;max-width:620px;line-height:1.7}
+.section-header{margin-bottom:60px}
+.section-header.center{text-align:center}
+.section-header.center .section-desc{margin-left:auto;margin-right:auto}
+
+/* ---- Glass Card ---- */
+.glass-card{
+  background:var(--glass-bg);
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius-lg);
+  padding:40px;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  box-shadow:var(--glass-shadow);
+  transition:border-color var(--transition),transform var(--transition),box-shadow var(--transition);
+}
+.glass-card:hover{border-color:rgba(77,166,255,.22);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.4)}
+
+/* ---- Stats ---- */
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.stat-card{text-align:center;padding:36px 24px}
+.stat-number{
+  font-size:clamp(2rem,4vw,3rem);
+  font-weight:800;
+  letter-spacing:-.03em;
+  background:var(--accent-gradient);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:8px;
+  line-height:1.1;
+}
+.stat-label{color:var(--text-secondary);font-size:.875rem;line-height:1.4}
+.stat-detail{color:var(--text-muted);font-size:.8rem;margin-top:6px}
+
+/* ---- Pipeline ---- */
+.pipeline{display:flex;align-items:center;gap:0;flex-wrap:wrap;justify-content:center;margin-bottom:48px}
+.pipeline-step{
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:20px 16px;min-width:130px;flex:1;
+  position:relative;
+}
+.pipeline-icon{
+  width:56px;height:56px;
+  border-radius:50%;
+  background:rgba(77,166,255,.08);
+  border:1px solid rgba(77,166,255,.15);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:12px;
+  color:var(--accent-blue);
+}
+.pipeline-icon svg{width:24px;height:24px}
+.pipeline-step span{font-size:.8rem;color:var(--text-secondary);line-height:1.4;max-width:120px}
+.pipeline-arrow{
+  color:var(--text-muted);
+  font-size:1.25rem;
+  flex-shrink:0;
+  margin-top:-20px;
+}
+.tech-tags{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:12px}
+.tech-tag{
+  padding:8px 18px;
+  border-radius:100px;
+  font-size:.8rem;font-weight:500;
+  background:rgba(77,166,255,.06);
+  border:1px solid rgba(77,166,255,.1);
+  color:var(--text-secondary);
+}
+.tech-note{text-align:center;color:var(--text-muted);font-size:.875rem;margin-top:20px}
+
+/* ---- GIF Container ---- */
+.gif-container{
+  max-width:700px;
+  margin:24px auto;
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  border:1px solid rgba(77,166,255,.15);
+  box-shadow:0 0 24px rgba(77,166,255,.08),0 0 48px rgba(124,58,237,.05);
+}
+.gif-container img{
+  width:100%;
+  display:block;
+  border-radius:var(--radius-lg);
+}
+.gif-caption{
+  text-align:center;
+  color:var(--text-muted);
+  font-size:.85rem;
+  margin-top:12px;
+  font-weight:500;
+}
+
+/* ---- Demo Grid ---- */
+.demo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+.demo-item .gif-container{margin:0 auto 12px}
+
+/* ---- Cloud ---- */
+.cloud-subsection{margin-bottom:64px}
+.cloud-subsection:last-child{margin-bottom:0}
+.cloud-subsection-title{
+  font-size:1.5rem;
+  font-weight:700;
+  letter-spacing:-.02em;
+  margin-bottom:12px;
+  color:var(--text-primary);
+}
+.cloud-subsection-desc{
+  color:var(--text-secondary);
+  font-size:1rem;
+  line-height:1.7;
+  margin-bottom:32px;
+  max-width:720px;
+}
+
+/* ---- AWS Services Grid ---- */
+.aws-services-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+  margin-bottom:48px;
+}
+.aws-service-card{
+  padding:24px;
+  border-radius:var(--radius);
+  background:var(--glass-bg);
+  border:1px solid var(--glass-border);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  transition:border-color var(--transition),transform var(--transition);
+}
+.aws-service-card:hover{
+  border-color:rgba(77,166,255,.2);
+  transform:translateY(-2px);
+}
+.aws-service-name{
+  font-size:.9rem;
+  font-weight:700;
+  color:var(--accent-blue);
+  margin-bottom:8px;
+  letter-spacing:.01em;
+}
+.aws-service-desc{
+  font-size:.825rem;
+  color:var(--text-secondary);
+  line-height:1.55;
+}
+
+/* ---- DevOps Grid ---- */
+.devops-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+}
+.devops-card{
+  padding:28px 20px;
+  text-align:center;
+}
+.devops-card h4{
+  font-size:.95rem;
+  font-weight:700;
+  margin-bottom:8px;
+  color:var(--text-primary);
+}
+.devops-card p{
+  font-size:.825rem;
+  color:var(--text-secondary);
+  line-height:1.55;
+}
+
+/* ---- Badge ---- */
+.badge{
+  display:inline-flex;align-items:center;
+  padding:5px 14px;border-radius:100px;
+  font-size:.75rem;font-weight:600;
+  letter-spacing:.03em;white-space:nowrap;
+}
+.badge-released{background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.2)}
+
+/* ---- Footer ---- */
+.site-footer{
+  padding:40px 0;
+  border-top:1px solid rgba(77,166,255,.06);
+  text-align:center;
+}
+.footer-name{font-size:1.1rem;font-weight:700;margin-bottom:6px}
+.footer-name span{background:var(--accent-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.footer-desc{color:var(--text-muted);font-size:.85rem;margin-bottom:20px}
+.footer-links{display:flex;gap:24px;justify-content:center;margin-bottom:20px}
+.footer-links a{color:var(--text-secondary);font-size:.85rem}
+.footer-links a:hover{color:var(--text-primary)}
+.footer-copy{color:var(--text-muted);font-size:.8rem}
+
+/* ---- Animations ---- */
+.fade-in{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+/* ---- Pipeline Image Section ---- */
+.pipeline-image-section{
+  text-align:center;
+}
+.pipeline-image-section img{
+  width:100%;
+  max-width:900px;
+  margin:0 auto;
+  border-radius:var(--radius-lg);
+  border:1px solid var(--border-card);
+  box-shadow:0 8px 40px rgba(77,166,255,.12),0 0 60px rgba(124,58,237,.06);
+}
+
+/* ---- Architecture Images ---- */
+.arch-image{
+  width:100%;
+  max-width:1000px;
+  border-radius:16px;
+  border:1px solid var(--border-card);
+  margin:0 auto;
+  display:block;
+}
+
+/* ---- Cloud Pilot ---- */
+.cloud-pilot-section{
+  background:linear-gradient(135deg, rgba(124,58,237,0.08), rgba(77,166,255,0.06));
+}
+
+/* ---- Responsive ---- */
+@media(max-width:1024px){
+  .stats-grid{grid-template-columns:repeat(3,1fr)}
+  .demo-grid{grid-template-columns:1fr}
+  .aws-services-grid{grid-template-columns:repeat(2,1fr)}
+  .devops-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:768px){
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .aws-services-grid{grid-template-columns:1fr}
+  .devops-grid{grid-template-columns:1fr}
+  .demo-grid{grid-template-columns:1fr}
+  section{padding:72px 0}
+  .glass-card{padding:28px 24px}
+  nav{
+    position:fixed;top:0;right:0;bottom:0;
+    flex-direction:column;justify-content:center;
+    background:rgba(10,14,26,.97);
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    width:260px;
+    padding:40px;gap:24px;
+    transform:translateX(100%);
+    transition:transform var(--transition);
+    z-index:999;
+  }
+  nav.open{transform:translateX(0)}
+  nav a{font-size:1rem}
+  .nav-toggle{display:block;z-index:1001}
+  .pipeline{gap:8px}
+  .pipeline-step{min-width:100px;padding:12px 8px}
+  .pipeline-arrow{font-size:1rem}
+  .products-dropdown-menu{position:static;display:block;background:none;border:none;padding:0;margin-top:0;backdrop-filter:none;min-width:auto}
+  .products-dropdown-menu a{padding:4px 12px;font-size:.9rem}
+}
+@media(max-width:480px){
+  .stats-grid{grid-template-columns:1fr}
+  .hero-ctas{flex-direction:column;align-items:center}
+  .btn{width:100%;justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="site-header" id="top">
+  <div class="header-inner">
+    <a href="index.html" class="logo">Deep<span>Field</span> Labs</a>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <nav id="main-nav">
+      <a href="index.html">Home</a>
+      <div class="products-dropdown">
+        <a>Products &#9662;</a>
+        <div class="products-dropdown-menu">
+          <a href="astrolens.html" class="active">AstroLens</a>
+          <a href="mitraseti.html">MitraSETI</a>
+        </div>
+      </div>
+      <a href="index.html#about">About</a>
+      <a href="index.html#contact">Contact</a>
+      <a href="https://github.com/deepfieldlabs" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero" id="hero">
+  <div class="starfield" id="starfield" aria-hidden="true"></div>
+  <div class="hero-content fade-in">
+    <img src="astrolens_logo.png" alt="AstroLens logo" class="hero-logo">
+    <h1><span class="gradient">AstroLens</span></h1>
+    <p class="hero-subtitle">AI-Powered Astronomical Image Anomaly Detection</p>
+    <div class="version-badge">v1.1.0 &mdash; Released</div>
+    <div class="hero-ctas">
+      <a href="https://github.com/deepfieldlabs/astroLens" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 00-3.8 23.38c.6.11.82-.26.82-.58v-2.16c-3.34.73-4.04-1.61-4.04-1.61a3.18 3.18 0 00-1.33-1.76c-1.09-.74.08-.73.08-.73a2.52 2.52 0 011.84 1.24 2.56 2.56 0 003.5 1 2.56 2.56 0 01.76-1.61c-2.67-.3-5.47-1.33-5.47-5.93a4.64 4.64 0 011.24-3.22 4.3 4.3 0 01.12-3.18s1-.33 3.3 1.23a11.38 11.38 0 016 0c2.28-1.56 3.29-1.23 3.29-1.23a4.3 4.3 0 01.12 3.18 4.64 4.64 0 011.23 3.22c0 4.61-2.81 5.63-5.48 5.92a2.86 2.86 0 01.82 2.22v3.29c0 .32.21.7.82.58A12 12 0 0012 .3"/></svg>
+        View on GitHub
+      </a>
+      <a href="#pipeline" class="btn btn-secondary">
+        See the Pipeline
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Pipeline Image -->
+<section id="pipeline" style="background:var(--bg-secondary)">
+  <div class="container">
+    <div class="section-header center fade-in">
+      <p class="section-label">Architecture</p>
+      <h2 class="section-title">End-to-End Intelligent Pipeline</h2>
+      <p class="section-desc">From raw sky survey data to actionable discovery reports — fully autonomous, self-correcting, and production-ready.</p>
+    </div>
+    <div class="pipeline-image-section fade-in">
+      <img src="astrolens_pipeline_v2.png" alt="AstroLens end-to-end ML pipeline" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- Results -->
+<section id="results">
+  <div class="container">
+    <div class="section-header center fade-in">
+      <p class="section-label">Results</p>
+      <h2 class="section-title">What AstroLens Found</h2>
+      <p class="section-desc">Autonomous analysis across multiple sky surveys with zero human intervention.</p>
+    </div>
+    <div class="stats-grid">
+      <div class="glass-card stat-card fade-in">
+        <div class="stat-number">22,195</div>
+        <div class="stat-label">Images Analyzed</div>
+      </div>
+      <div class="glass-card stat-card fade-in">
+        <div class="stat-number">3,541</div>
+        <div class="stat-label">Anomaly Candidates</div>
+      </div>
+      <div class="glass-card stat-card fade-in">
+        <div class="stat-number">99.5%</div>
+        <div class="stat-label">YOLO Detection Accuracy</div>
+      </div>
+      <div class="glass-card stat-card fade-in">
+        <div class="stat-number">5,471</div>
+        <div class="stat-label">Unique Sky Regions</div>
+      </div>
+      <div class="glass-card stat-card fade-in">
+        <div class="stat-number">0</div>
+        <div class="stat-label">Human Intervention Required</div>
+      </div>
+      <div class="glass-card stat-card fade-in">
+        <div class="stat-number">269</div>
+        <div class="stat-label">Known Objects Recovered</div>
+        <div class="stat-detail">Including SN 2014J, NGC 3690, SDSS J0252+0039</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Demo -->
+<section id="demo" style="background:var(--bg-secondary)">
+  <div class="container">
+    <div class="section-header center fade-in">
+      <p class="section-label">Demo</p>
+      <h2 class="section-title">See It in Action</h2>
+      <p class="section-desc">AstroLens provides an intuitive web interface for detection, gallery viewing, and result visualization.</p>
+    </div>
+    <div class="demo-grid">
+      <div class="demo-item fade-in">
+        <div class="gif-container">
+          <img src="detect.gif" alt="AstroLens anomaly detection in action" loading="lazy">
+        </div>
+        <p class="gif-caption">Anomaly Detection</p>
+      </div>
+      <div class="demo-item fade-in">
+        <div class="gif-container">
+          <img src="viewer.gif" alt="AstroLens gallery and viewer" loading="lazy">
+        </div>
+        <p class="gif-caption">Gallery &amp; Viewer</p>
+      </div>
+      <div class="demo-item fade-in">
+        <div class="gif-container">
+          <img src="visualise.gif" alt="AstroLens visualization and analysis" loading="lazy">
+        </div>
+        <p class="gif-caption">Visualization &amp; Analysis</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Technology -->
+<section id="technology">
+  <div class="container">
+    <div class="section-header center fade-in">
+      <p class="section-label">Technology</p>
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-desc">An end-to-end intelligent pipeline from raw sky survey data to actionable discovery reports.</p>
+    </div>
+    <div class="pipeline fade-in">
+      <div class="pipeline-step">
+        <div class="pipeline-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </div>
+        <span>Download from Sky Surveys</span>
+      </div>
+      <div class="pipeline-arrow" aria-hidden="true">&#8594;</div>
+      <div class="pipeline-step">
+        <div class="pipeline-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <span>ViT Classification</span>
+      </div>
+      <div class="pipeline-arrow" aria-hidden="true">&#8594;</div>
+      <div class="pipeline-step">
+        <div class="pipeline-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        </div>
+        <span>OOD Anomaly Detection</span>
+      </div>
+      <div class="pipeline-arrow" aria-hidden="true">&#8594;</div>
+      <div class="pipeline-step">
+        <div class="pipeline-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <span>YOLO Transient Detection</span>
+      </div>
+      <div class="pipeline-arrow" aria-hidden="true">&#8594;</div>
+      <div class="pipeline-step">
+        <div class="pipeline-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+        </div>
+        <span>Catalog Cross-Reference</span>
+      </div>
+      <div class="pipeline-arrow" aria-hidden="true">&#8594;</div>
+      <div class="pipeline-step">
+        <div class="pipeline-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <span>Discovery Report</span>
+      </div>
+    </div>
+    <div class="fade-in" style="text-align:center">
+      <div class="tech-tags">
+        <span class="tech-tag">Python</span>
+        <span class="tech-tag">PyTorch</span>
+        <span class="tech-tag">FastAPI</span>
+        <span class="tech-tag">YOLOv8</span>
+        <span class="tech-tag">Docker</span>
+      </div>
+      <p class="tech-note">Runs on laptop: CPU, Apple MPS, and NVIDIA CUDA supported</p>
+    </div>
+  </div>
+</section>
+
+<!-- Cloud Architecture -->
+<section id="cloud" style="background:var(--bg-secondary)">
+  <div class="container">
+    <div class="section-header center fade-in">
+      <p class="section-label">Infrastructure</p>
+      <h2 class="section-title">Cloud Architecture on AWS</h2>
+      <p class="section-desc">Production deployment patterns that take AstroLens from local research into cloud-native, scalable infrastructure.</p>
+    </div>
+
+    <!-- Architecture Images -->
+    <div class="cloud-subsection fade-in">
+      <h3 class="cloud-subsection-title">ML Inference Pipeline</h3>
+      <p class="cloud-subsection-desc">Managed services orchestrate the full ML pipeline at scale on AWS.</p>
+      <div style="text-align:center">
+        <img src="ml_pipeline_architecture.png" alt="ML Inference Pipeline - AWS Production Architecture" class="arch-image" style="box-shadow:0 8px 32px rgba(77,166,255,.1);" loading="lazy">
+      </div>
+    </div>
+
+    <div class="cloud-subsection fade-in">
+      <h3 class="cloud-subsection-title">Infrastructure Architecture</h3>
+      <p class="cloud-subsection-desc">Full AWS platform view — networking, compute, storage, and security layers.</p>
+      <div style="text-align:center">
+        <img src="infrastructure_architecture.png" alt="Infrastructure Architecture - AWS Platform View" class="arch-image" style="box-shadow:0 8px 32px rgba(99,102,241,.1);" loading="lazy">
+      </div>
+    </div>
+
+    <div class="cloud-subsection fade-in">
+      <h3 class="cloud-subsection-title">DevOps Pipeline</h3>
+      <p class="cloud-subsection-desc">End-to-end CI/CD and deployment automation from commit to production.</p>
+      <div style="text-align:center">
+        <img src="devops_pipeline_architecture.png" alt="CI/CD and Deployment Pipeline" class="arch-image" style="box-shadow:0 8px 32px rgba(124,58,237,.1);" loading="lazy">
+      </div>
+    </div>
+
+    <!-- AWS Services -->
+    <div class="cloud-subsection fade-in">
+      <h3 class="cloud-subsection-title">AWS Services</h3>
+      <p class="cloud-subsection-desc">Managed services powering the production ML pipeline.</p>
+      <div class="aws-services-grid">
+        <div class="aws-service-card">
+          <div class="aws-service-name">Amazon SageMaker</div>
+          <div class="aws-service-desc">Model training, fine-tuning, and managed inference endpoints</div>
+        </div>
+        <div class="aws-service-card">
+          <div class="aws-service-name">AWS Step Functions</div>
+          <div class="aws-service-desc">Orchestration of multi-stage ML pipelines (download, classify, detect, cross-reference, report)</div>
+        </div>
+        <div class="aws-service-card">
+          <div class="aws-service-name">Amazon Bedrock</div>
+          <div class="aws-service-desc">Foundation model integration for enhanced classification and natural language analysis</div>
+        </div>
+        <div class="aws-service-card">
+          <div class="aws-service-name">Amazon S3</div>
+          <div class="aws-service-desc">Data lake for survey images, model artifacts, and results</div>
+        </div>
+        <div class="aws-service-card">
+          <div class="aws-service-name">Amazon SQS / SNS</div>
+          <div class="aws-service-desc">Event-driven processing and alert notifications</div>
+        </div>
+        <div class="aws-service-card">
+          <div class="aws-service-name">AWS Lambda</div>
+          <div class="aws-service-desc">Serverless preprocessing, image validation, and lightweight inference</div>
+        </div>
+        <div class="aws-service-card">
+          <div class="aws-service-name">Amazon DynamoDB</div>
+          <div class="aws-service-desc">Low-latency metadata store for candidates and cross-reference results</div>
+        </div>
+        <div class="aws-service-card">
+          <div class="aws-service-name">Amazon CloudWatch</div>
+          <div class="aws-service-desc">Monitoring, alerting, and pipeline health dashboards</div>
+        </div>
+        <div class="aws-service-card">
+          <div class="aws-service-name">Amazon ECR + ECS/EKS</div>
+          <div class="aws-service-desc">Container orchestration for scalable inference workers</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Flow -->
+    <div class="cloud-subsection fade-in">
+      <div style="padding:32px;background:var(--bg-card);border:1px solid var(--border-card);border-radius:16px;">
+        <h4 style="color:var(--accent-blue);font-size:1.1rem;margin-bottom:20px;">Data Flow: Inputs, Processing, Outputs</h4>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
+          <div>
+            <h5 style="color:var(--accent-purple);font-size:.9rem;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">Inputs</h5>
+            <ul style="list-style:none;padding:0;color:var(--text-secondary);font-size:.85rem;line-height:1.8">
+              <li>Sky survey image archives (SDSS, ZTF, DECaLS)</li>
+              <li>Transient alert streams (TNS, ZTF alerts)</li>
+              <li>Astronomical catalog data (SIMBAD, NED)</li>
+              <li>Pre-trained model artifacts (ViT, YOLO)</li>
+            </ul>
+          </div>
+          <div>
+            <h5 style="color:var(--accent-blue);font-size:.9rem;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">Processing</h5>
+            <ul style="list-style:none;padding:0;color:var(--text-secondary);font-size:.85rem;line-height:1.8">
+              <li>Step Functions orchestrates multi-stage pipeline</li>
+              <li>Lambda validates and preprocesses images</li>
+              <li>SageMaker runs ViT + OOD + YOLO inference</li>
+              <li>Bedrock provides enhanced analysis context</li>
+              <li>Cross-reference against catalog databases</li>
+            </ul>
+          </div>
+          <div>
+            <h5 style="color:#22c55e;font-size:.9rem;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">Outputs</h5>
+            <ul style="list-style:none;padding:0;color:var(--text-secondary);font-size:.85rem;line-height:1.8">
+              <li>Ranked anomaly candidates with confidence</li>
+              <li>Cross-reference verification status</li>
+              <li>Morphology and classification reports</li>
+              <li>Real-time SNS alerts for high-confidence detections</li>
+              <li>CloudWatch dashboards and operational metrics</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DevOps -->
+    <div class="cloud-subsection fade-in">
+      <h3 class="cloud-subsection-title">DevOps &amp; Platform Engineering</h3>
+      <p class="cloud-subsection-desc">End-to-end delivery covering design, implementation, automation, and operations.</p>
+      <div class="devops-grid">
+        <div class="glass-card devops-card">
+          <h4>Infrastructure as Code</h4>
+          <p>Terraform, CloudFormation, CDK &mdash; repeatable, version-controlled infrastructure</p>
+        </div>
+        <div class="glass-card devops-card">
+          <h4>CI/CD Pipelines</h4>
+          <p>GitHub Actions, CodePipeline &mdash; automated build, test, and blue-green deployment</p>
+        </div>
+        <div class="glass-card devops-card">
+          <h4>GitOps &amp; ArgoCD</h4>
+          <p>Declarative deployments, drift detection, and rollback from a single source of truth</p>
+        </div>
+        <div class="glass-card devops-card">
+          <h4>Container Orchestration</h4>
+          <p>ECS and EKS workload management, auto-scaling, service mesh, multi-AZ resilience</p>
+        </div>
+        <div class="glass-card devops-card">
+          <h4>Security &amp; Compliance</h4>
+          <p>IAM policies, GuardDuty, Security Hub, automated vulnerability scanning in pipeline</p>
+        </div>
+        <div class="glass-card devops-card">
+          <h4>Observability</h4>
+          <p>CloudWatch, X-Ray, Prometheus, Grafana &mdash; full-stack monitoring and distributed tracing</p>
+        </div>
+        <div class="glass-card devops-card">
+          <h4>Cost Optimisation</h4>
+          <p>Right-sizing, Savings Plans, Spot instances, Cost Explorer dashboards</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Cloud Pilot CTA -->
+<section id="cloud-pilot" class="cloud-pilot-section">
+  <div class="container">
+    <div class="section-header center fade-in">
+      <p class="section-label" style="background:var(--accent-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Cloud Pilot Program</p>
+      <h2 class="section-title">Run AstroLens at Scale &mdash; In the Cloud</h2>
+      <p class="section-desc">We are developing cloud-hosted versions of AstroLens for research teams and institutions that need GPU-accelerated analysis without local infrastructure.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:48px">
+      <div class="glass-card fade-in" style="text-align:center;padding:32px 24px">
+        <div style="font-size:2rem;margin-bottom:12px">&#x2601;</div>
+        <h3 style="font-size:1rem;font-weight:600;margin-bottom:8px">Managed GPU Clusters</h3>
+        <p style="font-size:.875rem;color:var(--text-secondary);line-height:1.6">No setup. No maintenance. Auto-scaling GPU inference on demand.</p>
+      </div>
+      <div class="glass-card fade-in" style="text-align:center;padding:32px 24px">
+        <div style="font-size:2rem;margin-bottom:12px">&#x1F4CA;</div>
+        <h3 style="font-size:1rem;font-weight:600;margin-bottom:8px">Team Dashboards</h3>
+        <p style="font-size:.875rem;color:var(--text-secondary);line-height:1.6">Collaborative web interfaces with shared results, sky maps, and live streaming views.</p>
+      </div>
+      <div class="glass-card fade-in" style="text-align:center;padding:32px 24px">
+        <div style="font-size:2rem;margin-bottom:12px">&#x1F517;</div>
+        <h3 style="font-size:1rem;font-weight:600;margin-bottom:8px">REST API Access</h3>
+        <p style="font-size:.875rem;color:var(--text-secondary);line-height:1.6">Build custom applications on top of our analysis engines via production-grade APIs.</p>
+      </div>
+    </div>
+    <div style="text-align:center" class="fade-in">
+      <a href="https://www.linkedin.com/in/samantabatabaeian/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="font-size:1rem;padding:14px 32px;">Contact Us on LinkedIn</a>
+      <p style="color:var(--text-muted);font-size:.85rem;margin-top:12px">Priority support &bull; Onboarding assistance &bull; Custom configurations available</p>
+    </div>
+  </div>
+</section>
+
+<!-- GitHub CTA -->
+<section id="github-cta">
+  <div class="container">
+    <div style="text-align:center" class="fade-in">
+      <p class="section-label">Open Source</p>
+      <h2 class="section-title">Explore the Code</h2>
+      <p class="section-desc" style="margin:0 auto 40px">AstroLens is fully open source. Clone, run, and contribute — science advances fastest when tools are transparent and accessible.</p>
+      <a href="https://github.com/deepfieldlabs/astroLens" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="font-size:1rem;padding:16px 36px;">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px"><path d="M12 .3a12 12 0 00-3.8 23.38c.6.11.82-.26.82-.58v-2.16c-3.34.73-4.04-1.61-4.04-1.61a3.18 3.18 0 00-1.33-1.76c-1.09-.74.08-.73.08-.73a2.52 2.52 0 011.84 1.24 2.56 2.56 0 003.5 1 2.56 2.56 0 01.76-1.61c-2.67-.3-5.47-1.33-5.47-5.93a4.64 4.64 0 011.24-3.22 4.3 4.3 0 01.12-3.18s1-.33 3.3 1.23a11.38 11.38 0 016 0c2.28-1.56 3.29-1.23 3.29-1.23a4.3 4.3 0 01.12 3.18 4.64 4.64 0 011.23 3.22c0 4.61-2.81 5.63-5.48 5.92a2.86 2.86 0 01.82 2.22v3.29c0 .32.21.7.82.58A12 12 0 0012 .3"/></svg>
+        View AstroLens on GitHub
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container">
+    <p class="footer-name">Deep<span>Field</span> Labs</p>
+    <p class="footer-desc">Open-source tools for astronomical discovery</p>
+    <div class="footer-links">
+      <a href="https://github.com/deepfieldlabs" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="https://www.linkedin.com/in/samantabatabaeian/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="mailto:baroonclouds@gmail.com">Email</a>
+    </div>
+    <p class="footer-copy">&copy; 2026 DeepField Labs. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var sf=document.getElementById('starfield');
+  if(sf){
+    var frag=document.createDocumentFragment();
+    for(var i=0;i<120;i++){
+      var s=document.createElement('div');
+      s.className='star';
+      s.style.left=Math.random()*100+'%';
+      s.style.top=Math.random()*100+'%';
+      var size=Math.random()*2+1;
+      s.style.width=size+'px';
+      s.style.height=size+'px';
+      s.style.setProperty('--dur',(Math.random()*4+2)+'s');
+      s.style.setProperty('--peak',Math.random()*.6+.3);
+      s.style.animationDelay=Math.random()*5+'s';
+      frag.appendChild(s);
+    }
+    sf.appendChild(frag);
+  }
+
+  var header=document.querySelector('.site-header');
+  var scrolled=false;
+  function onScroll(){
+    var s=window.scrollY>40;
+    if(s!==scrolled){scrolled=s;header.classList.toggle('scrolled',s)}
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+
+  var els=document.querySelectorAll('.fade-in');
+  if('IntersectionObserver' in window){
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}
+      });
+    },{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+    els.forEach(function(el){obs.observe(el)});
+  }else{
+    els.forEach(function(el){el.classList.add('visible')});
+  }
+
+  var toggle=document.querySelector('.nav-toggle');
+  var nav=document.getElementById('main-nav');
+  if(toggle&&nav){
+    toggle.addEventListener('click',function(){
+      var open=nav.classList.toggle('open');
+      toggle.setAttribute('aria-expanded',open);
+    });
+    nav.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click',function(){nav.classList.remove('open');toggle.setAttribute('aria-expanded','false')});
+    });
+  }
+})();
+</script>
+</body>
+</html>
