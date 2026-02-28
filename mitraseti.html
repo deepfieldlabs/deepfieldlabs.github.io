@@ -467,8 +467,41 @@ section{padding:100px 0}
   </div>
 </section>
 
+<!-- App Screenshots -->
+<section id="screenshots">
+  <div class="container">
+    <div class="section-header center fade-in">
+      <p class="section-label">Desktop Application</p>
+      <h2 class="section-title">See It in Action</h2>
+      <p class="section-desc">MitraSETI ships with a full-featured PyQt5 desktop app and a FastAPI web interface for real-time signal monitoring.</p>
+    </div>
+    <div class="screenshots-grid fade-in" style="display:grid;grid-template-columns:1fr;gap:40px;margin-top:40px">
+      <div class="screenshot-item" style="text-align:center">
+        <div class="img-container" style="border-radius:12px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.4)">
+          <img src="waterfall_viewer.png" alt="MitraSETI Waterfall Viewer" loading="lazy" style="width:100%;display:block">
+        </div>
+        <p style="color:rgba(255,255,255,.7);margin-top:16px;font-size:.95rem">Waterfall Viewer &mdash; spectrogram display with drift-rate overlay and zoom controls</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">
+        <div class="screenshot-item" style="text-align:center">
+          <div class="img-container" style="border-radius:12px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.4)">
+            <img src="signal_gallery.png" alt="MitraSETI Signal Gallery" loading="lazy" style="width:100%;display:block">
+          </div>
+          <p style="color:rgba(255,255,255,.7);margin-top:16px;font-size:.95rem">Signal Gallery &mdash; ML-classified detections with confidence scores</p>
+        </div>
+        <div class="screenshot-item" style="text-align:center">
+          <div class="img-container" style="border-radius:12px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.4)">
+            <img src="sky_radar.png" alt="MitraSETI Sky Radar" loading="lazy" style="width:100%;display:block">
+          </div>
+          <p style="color:rgba(255,255,255,.7);margin-top:16px;font-size:.95rem">Sky Radar &mdash; interactive celestial map with radio + optical overlay</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- Technology -->
-<section id="technology">
+<section id="technology" style="background:var(--bg-secondary)">
   <div class="container">
     <div class="section-header center fade-in">
       <p class="section-label">Technology</p>
