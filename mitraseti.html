@@ -352,6 +352,7 @@ section{padding:100px 0}
         <div class="products-dropdown-menu">
           <a href="mitraseti.html" class="active">MitraSETI</a>
           <a href="astrolens.html">AstroLens</a>
+          <a href="drift.html">Drift</a>
         </div>
       </div>
       <a href="index.html#about">About</a>
@@ -368,7 +369,7 @@ section{padding:100px 0}
     <img src="mitraseti_logo.png" alt="MitraSETI Logo" class="hero-logo">
     <h1><span class="gradient">MitraSETI</span></h1>
     <p class="hero-subtitle">Rust-Accelerated SETI Signal Analysis with ML Classification</p>
-    <p class="hero-sub2"><span class="badge badge-released">v0.1.0 &mdash; Released</span></p>
+    <p class="hero-sub2"><span class="badge badge-released">v0.2.0 &mdash; Released</span></p>
     <div class="hero-ctas">
       <a href="https://github.com/deepfieldlabs/MitraSETI" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 00-3.8 23.38c.6.11.82-.26.82-.58v-2.16c-3.34.73-4.04-1.61-4.04-1.61a3.18 3.18 0 00-1.33-1.76c-1.09-.74.08-.73.08-.73a2.52 2.52 0 011.84 1.24 2.56 2.56 0 003.5 1 2.56 2.56 0 01.76-1.61c-2.67-.3-5.47-1.33-5.47-5.93a4.64 4.64 0 011.24-3.22 4.3 4.3 0 01.12-3.18s1-.33 3.3 1.23a11.38 11.38 0 016 0c2.28-1.56 3.29-1.23 3.29-1.23a4.3 4.3 0 01.12 3.18 4.64 4.64 0 011.23 3.22c0 4.61-2.81 5.63-5.48 5.92a2.86 2.86 0 01.82 2.22v3.29c0 .32.21.7.82.58A12 12 0 0012 .3"/></svg>
@@ -423,6 +424,7 @@ section{padding:100px 0}
     </div>
     <div class="comparison-content fade-in">
       <p><strong>45x speedup on Voyager-1 data.</strong> MitraSETI processes a million-channel HDF5 observation in 0.06 seconds &mdash; turboSETI takes 2.53 seconds for the same file. The Rust de-Doppler engine distributes drift-rate trials across all CPU cores using rayon parallelism, replacing turboSETI's single-threaded Python loop.</p>
+      <p><strong>v0.2.0 introduces the Taylor tree algorithm</strong> &mdash; an O(N log N) de-Doppler search that achieves 4.3x additional speedup over brute-force on Voyager-1 data. Combined with HDBSCAN density-based clustering and adaptive spectral kurtosis RFI excision, the pipeline now processes real Breakthrough Listen data with publication-grade sensitivity.</p>
       <p>turboSETI reports raw hits. MitraSETI reports <strong>classified candidates</strong> &mdash; signals that survived rule-based filtering, CNN+Transformer inference, and out-of-distribution analysis. One high-confidence candidate is more actionable than three unscreened hits.</p>
     </div>
   </div>
@@ -583,6 +585,55 @@ section{padding:100px 0}
         <span class="tech-tag">PyQt5</span>
       </div>
       <p class="tech-note">Hybrid Rust+Python architecture. Rust handles DSP, Python handles ML inference.</p>
+    </div>
+  </div>
+</section>
+
+<!-- v0.2.0 Features -->
+<section id="v020" style="background:var(--bg-secondary)">
+  <div class="container">
+    <div class="section-header center fade-in">
+      <p class="section-label">What's New</p>
+      <h2 class="section-title">v0.2.0 &mdash; Publication-Ready Pipeline</h2>
+      <p class="section-desc">13 major features for scientifically rigorous SETI signal analysis, built for reproducibility and interoperability.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+      <div class="glass-card fade-in" style="padding:28px">
+        <h4 style="color:var(--accent-blue);font-size:.95rem;margin-bottom:8px">Taylor Tree De-Doppler</h4>
+        <p style="color:var(--text-secondary);font-size:.85rem;line-height:1.6">O(N log N) algorithm &mdash; 4.3x faster than brute-force on Voyager-1. Based on Taylor (1974).</p>
+      </div>
+      <div class="glass-card fade-in" style="padding:28px">
+        <h4 style="color:var(--accent-blue);font-size:.95rem;margin-bottom:8px">HDBSCAN Clustering</h4>
+        <p style="color:var(--text-secondary);font-size:.85rem;line-height:1.6">Density-based hit deduplication replaces greedy method for robust false-positive reduction.</p>
+      </div>
+      <div class="glass-card fade-in" style="padding:28px">
+        <h4 style="color:var(--accent-blue);font-size:.95rem;margin-bottom:8px">Spectral Kurtosis RFI</h4>
+        <p style="color:var(--text-secondary);font-size:.85rem;line-height:1.6">Adaptive thresholds (median + MAD) for RFI excision. Nita &amp; Gary (2010) method.</p>
+      </div>
+      <div class="glass-card fade-in" style="padding:28px">
+        <h4 style="color:var(--accent-blue);font-size:.95rem;margin-bottom:8px">FITS Catalog Export</h4>
+        <p style="color:var(--text-secondary);font-size:.85rem;line-height:1.6">Standard astronomical format via astropy. Compatible with TOPCAT, Aladin, and VO tools.</p>
+      </div>
+      <div class="glass-card fade-in" style="padding:28px">
+        <h4 style="color:var(--accent-blue);font-size:.95rem;margin-bottom:8px">Known RFI Database</h4>
+        <p style="color:var(--text-secondary);font-size:.85rem;line-height:1.6">27 cataloged terrestrial interference sources for automated labeling (GPS, Iridium, WiFi, etc.).</p>
+      </div>
+      <div class="glass-card fade-in" style="padding:28px">
+        <h4 style="color:var(--accent-blue);font-size:.95rem;margin-bottom:8px">Cross-Epoch Persistence</h4>
+        <p style="color:var(--text-secondary);font-size:.85rem;line-height:1.6">Track recurring signals across multiple observations of the same target for credibility scoring.</p>
+      </div>
+      <div class="glass-card fade-in" style="padding:28px">
+        <h4 style="color:var(--accent-blue);font-size:.95rem;margin-bottom:8px">Astropy Cross-Matching</h4>
+        <p style="color:var(--text-secondary);font-size:.85rem;line-height:1.6">SkyCoord KD-tree matching between MitraSETI radio detections and AstroLens optical anomalies.</p>
+      </div>
+      <div class="glass-card fade-in" style="padding:28px">
+        <h4 style="color:var(--accent-blue);font-size:.95rem;margin-bottom:8px">Click CLI</h4>
+        <p style="color:var(--text-secondary);font-size:.85rem;line-height:1.6"><code>mitraseti search</code>, <code>stream</code>, <code>benchmark</code>, <code>export</code>, <code>crossmatch</code>, <code>report</code>.</p>
+      </div>
+      <div class="glass-card fade-in" style="padding:28px">
+        <h4 style="color:var(--accent-blue);font-size:.95rem;margin-bottom:8px">ON/OFF Cadence Filter</h4>
+        <p style="color:var(--text-secondary);font-size:.85rem;line-height:1.6">Standard SETI RFI rejection using observation cadence patterns (ABACAD).</p>
+      </div>
     </div>
   </div>
 </section>
