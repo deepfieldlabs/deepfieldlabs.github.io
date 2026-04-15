@@ -6,14 +6,14 @@
 <title>DeepField Labs -- Open-Source AI for Astronomical Discovery</title>
 <meta name="description" content="Open-source AI tools for astronomical discovery. From local research to cloud-native production. Vision Transformers, anomaly detection, and radio signal analysis at scale.">
 <meta name="author" content="Saman Tabatabaeian">
-<meta property="og:title" content="DeepField Labs -- Open-Source AI for Astronomical Discovery">
-<meta property="og:description" content="We build intelligent tools that scan the sky, detect anomalies, and surface discoveries -- autonomously, at scale.">
+<meta property="og:title" content="DeepField Labs — Intelligent Systems for Science and Security">
+<meta property="og:description" content="We build intelligent tools for science and security — astronomical discovery, radio signal analysis, and cloud security anomaly detection.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="">
 <meta property="og:url" content="">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="DeepField Labs -- Open-Source AI for Astronomical Discovery">
-<meta name="twitter:description" content="Open-source AI tools for astronomical discovery. From local research to cloud-native production.">
+<meta name="twitter:title" content="DeepField Labs — Intelligent Systems for Science and Security">
+<meta name="twitter:description" content="Open-source AI tools for science and security. Astronomical discovery, radio signal analysis, and cloud security anomaly detection.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -22,7 +22,7 @@
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "DeepField Labs",
-  "description": "Open-source AI tools for astronomical discovery",
+  "description": "Open-source AI tools for science and security",
   "url": "",
   "email": "baroonclouds@gmail.com",
   "founder": {
@@ -190,7 +190,7 @@ section{padding:100px 0}
 
 /* ---- Products ---- */
 #products{background:var(--bg-secondary)}
-.products-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:32px}
+.products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
 .product-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:20px;flex-wrap:wrap}
 .product-name{font-size:1.5rem;font-weight:700;letter-spacing:-.02em}
 .product-version{font-size:.8rem;color:var(--text-muted);font-weight:500;margin-top:4px}
@@ -201,6 +201,7 @@ section{padding:100px 0}
   letter-spacing:.03em;white-space:nowrap;
 }
 .badge-released{background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.2)}
+.badge-soon{background:rgba(245,158,11,.12);color:#f59e0b;border:1px solid rgba(245,158,11,.2)}
 .badge-dev{background:rgba(234,179,8,.12);color:#eab308;border:1px solid rgba(234,179,8,.2)}
 .product-tagline{color:var(--text-secondary);font-size:.95rem;margin-bottom:20px}
 .product-points{list-style:none;margin-bottom:20px}
@@ -679,6 +680,7 @@ section{padding:100px 0}
         <div class="products-dropdown-menu">
           <a href="astrolens.html"><span class="product-dot" style="background:#22c55e"></span>AstroLens <span style="font-size:.7rem;color:var(--text-muted);margin-left:auto">v1.1.0</span></a>
           <a href="mitraseti.html"><span class="product-dot" style="background:#4da6ff"></span>MitraSETI <span style="font-size:.7rem;color:var(--text-muted);margin-left:auto">v0.1.0</span></a>
+          <a href="drift.html"><span class="product-dot" style="background:#7c3aed"></span>Drift <span style="font-size:.7rem;color:var(--text-muted);margin-left:auto">v0.1.0</span></a>
         </div>
       </div>
       <a href="#why">Why</a>
@@ -694,12 +696,12 @@ section{padding:100px 0}
 <section class="hero" id="hero">
   <div class="starfield" id="starfield" aria-hidden="true"></div>
   <div class="hero-content fade-in">
-    <h1>Open-Source AI for<br><span class="gradient">Astronomical Discovery</span></h1>
-    <p class="hero-subtitle">We build intelligent tools that scan the sky, detect anomalies, and surface discoveries -- autonomously, at scale.</p>
-    <p class="hero-sub2">Local-first. Cloud-ready. Built for researchers and production.</p>
+    <h1>Intelligent Systems for<br><span class="gradient">Science and Security</span></h1>
+    <p class="hero-subtitle">We build intelligent tools for astronomical discovery and cloud security — anomaly detection, signal analysis, and ML-powered threat detection at scale.</p>
+    <p class="hero-sub2">Local-first. Cloud-ready. Open core for adoption.</p>
     <div class="hero-ctas">
-      <a href="#products" class="btn btn-primary">
-        Explore Projects
+      <a href="https://mitraseti-dev.deepfieldlabs.dev" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+        Try MitraSETI Cloud &mdash; Free
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
       </a>
       <a href="https://github.com/deepfieldlabs" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
@@ -716,7 +718,7 @@ section{padding:100px 0}
     <div class="section-header center fade-in">
       <p class="section-label">Products</p>
       <h2 class="section-title">What We Build</h2>
-      <p class="section-desc">Intelligent tools for automated astronomical discovery, from optical image analysis to radio signal processing.</p>
+      <p class="section-desc">Intelligent tools for science and security — optical image analysis, radio signal processing, and cloud security anomaly detection.</p>
     </div>
     <div class="products-grid">
       <article class="glass-card fade-in">
@@ -789,6 +791,34 @@ section{padding:100px 0}
           </a>
         </div>
       </article>
+      <article class="glass-card fade-in">
+        <div class="product-header">
+          <div>
+            <h3 class="product-name">Drift</h3>
+            <p class="product-version">v0.1.0</p>
+          </div>
+          <span class="badge badge-soon">Early Access</span>
+        </div>
+        <div style="text-align:center;margin-bottom:20px">
+          <div style="display:inline-flex;align-items:center;justify-content:center;width:120px;height:120px;background:linear-gradient(135deg,rgba(77,166,255,.15),rgba(124,58,237,.15));border-radius:16px;border:1px solid rgba(77,166,255,.2)">
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--accent-blue)"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4" stroke-width="2"/></svg>
+          </div>
+        </div>
+        <p class="product-tagline">ML-powered anomaly detection for cloud security. Open-source connector for CloudTrail and Prowler. Catch what rule-based tools miss.</p>
+        <ul class="product-points">
+          <li>CloudTrail + Prowler connector</li>
+          <li>Control catalog schema</li>
+          <li>OCSF export for Security Lake</li>
+          <li>Commercial: ML anomaly, security graph, evidence packs</li>
+        </ul>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:16px">
+          <a href="drift.html" class="btn btn-primary" style="padding:10px 22px;font-size:.85rem">Learn More</a>
+          <a href="https://github.com/deepfieldlabs/Drift" target="_blank" rel="noopener noreferrer" class="product-link" style="margin-top:6px">
+            View on GitHub
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+          </a>
+        </div>
+      </article>
     </div>
   </div>
 </section>
@@ -802,7 +832,7 @@ section{padding:100px 0}
     </div>
     <div style="max-width:800px;margin:0 auto" class="fade-in">
       <p style="color:var(--text-secondary);font-size:1.05rem;line-height:1.9;margin-bottom:20px">Modern astronomical surveys generate <strong style="color:var(--text-primary)">20 terabytes of data per night</strong> in optical images alone. Radio observatories like the Breakthrough Listen program produce millions of signal candidates across thousands of observation files. The bottleneck in astronomy has shifted from collecting data to analysing it. Anomalies &mdash; gravitational lenses, transient events, narrowband signals &mdash; slip through unnoticed.</p>
-      <p style="color:var(--text-secondary);font-size:1.05rem;line-height:1.9;margin-bottom:20px">We built <strong style="color:var(--text-primary)">AstroLens</strong> for optical sky survey analysis (Vision Transformers, YOLO, OOD detection) and <strong style="color:var(--text-primary)">MitraSETI</strong> for radio signal processing (Rust de-Doppler, CNN+Transformer classification). Together, they cover the full electromagnetic spectrum &mdash; optical and radio &mdash; with a unified ML-driven approach.</p>
+      <p style="color:var(--text-secondary);font-size:1.05rem;line-height:1.9;margin-bottom:20px">We built <strong style="color:var(--text-primary)">AstroLens</strong> for optical sky survey analysis (Vision Transformers, YOLO, OOD detection), <strong style="color:var(--text-primary)">MitraSETI</strong> for radio signal processing (Rust de-Doppler, CNN+Transformer classification), and <strong style="color:var(--text-primary)">Drift</strong> for cloud security anomaly detection (CloudTrail, Prowler, OCSF, ML behavioral baseline). Together, they cover science and security with a unified ML-driven approach.</p>
       <p style="color:var(--text-secondary);font-size:1.05rem;line-height:1.9;margin-bottom:20px">These tools demonstrate what we deliver professionally: <strong style="color:var(--text-primary)">end-to-end ML systems</strong> that move from a research concept to a production-grade, self-operating pipeline. The same engineering approach &mdash; designing for autonomy, building self-correcting feedback loops, instrumenting for observability &mdash; applies to any domain where organisations need to extract signal from large-scale data streams.</p>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px">
         <div style="text-align:center;padding:24px">
@@ -1031,34 +1061,34 @@ section{padding:100px 0}
   </div>
 </section>
 
-<!-- Cloud Pilot -->
-<section id="cloud-pilot" style="background:linear-gradient(135deg, rgba(124,58,237,0.08), rgba(77,166,255,0.06));">
+<!-- MitraSETI Cloud -->
+<section id="mitraseti-cloud" style="background:linear-gradient(135deg, rgba(124,58,237,0.08), rgba(77,166,255,0.06));">
   <div class="container">
     <div class="section-header center fade-in">
-      <p class="section-label" style="background:var(--accent-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Cloud Pilot Program</p>
-      <h2 class="section-title">Run Our Tools at Scale &mdash; In the Cloud</h2>
-      <p class="section-desc">We are developing cloud-hosted versions of AstroLens and MitraSETI for research teams and institutions that need GPU-accelerated analysis without local infrastructure.</p>
+      <p class="section-label" style="background:var(--accent-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Now Live</p>
+      <h2 class="section-title">MitraSETI Cloud &mdash; Try It Free</h2>
+      <p class="section-desc">MitraSETI Cloud is a fully managed SaaS platform for radio astronomy signal analysis. Upload your observation data, run automated detection and ML classification pipelines, and visualise results &mdash; all in your browser. No infrastructure setup, no installation required.</p>
     </div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:48px">
       <div class="glass-card fade-in" style="text-align:center;padding:32px 24px">
         <div style="font-size:2rem;margin-bottom:12px">&#x2601;</div>
-        <h3 style="font-size:1rem;font-weight:600;margin-bottom:8px">Managed GPU Clusters</h3>
-        <p style="font-size:.875rem;color:var(--text-secondary);line-height:1.6">No setup. No maintenance. Auto-scaling GPU inference on demand.</p>
+        <h3 style="font-size:1rem;font-weight:600;margin-bottom:8px">Upload &amp; Process</h3>
+        <p style="font-size:.875rem;color:var(--text-secondary);line-height:1.6">Upload .h5, .fil, .fits, and .hdf5 files up to 1 GB. Automated pipelines handle the rest.</p>
       </div>
       <div class="glass-card fade-in" style="text-align:center;padding:32px 24px">
         <div style="font-size:2rem;margin-bottom:12px">&#x1F4CA;</div>
-        <h3 style="font-size:1rem;font-weight:600;margin-bottom:8px">Team Dashboards</h3>
-        <p style="font-size:.875rem;color:var(--text-secondary);line-height:1.6">Collaborative web interfaces with shared results, sky maps, and live streaming views.</p>
+        <h3 style="font-size:1rem;font-weight:600;margin-bottom:8px">ML Classification</h3>
+        <p style="font-size:.875rem;color:var(--text-secondary);line-height:1.6">AstroLens-powered CNN + Transformer models classify signals and flag anomalies automatically.</p>
       </div>
       <div class="glass-card fade-in" style="text-align:center;padding:32px 24px">
         <div style="font-size:2rem;margin-bottom:12px">&#x1F517;</div>
-        <h3 style="font-size:1rem;font-weight:600;margin-bottom:8px">REST API Access</h3>
-        <p style="font-size:.875rem;color:var(--text-secondary);line-height:1.6">Build custom applications on top of our analysis engines via production-grade APIs.</p>
+        <h3 style="font-size:1rem;font-weight:600;margin-bottom:8px">Interactive Visualisation</h3>
+        <p style="font-size:.875rem;color:var(--text-secondary);line-height:1.6">Waterfall plots, signal galleries, and pipeline monitoring &mdash; real-time in your browser.</p>
       </div>
     </div>
     <div style="text-align:center" class="fade-in">
-      <a href="https://www.linkedin.com/in/samantabatabaeian/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="font-size:1rem;padding:14px 32px;">Contact Us on LinkedIn for Cloud Pilot Access</a>
-      <p style="color:var(--text-muted);font-size:.85rem;margin-top:12px">Priority support &bull; Onboarding assistance &bull; Custom configurations available</p>
+      <a href="https://mitraseti-dev.deepfieldlabs.dev" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="font-size:1rem;padding:14px 32px;">Try MitraSETI Cloud &mdash; Free Explorer Tier</a>
+      <p style="color:var(--text-muted);font-size:.85rem;margin-top:12px">Free tier available &bull; No credit card required &bull; Researcher and Institution tiers for larger workloads</p>
     </div>
   </div>
 </section>
@@ -1077,8 +1107,8 @@ section{padding:100px 0}
         <p>Partner on astronomical surveys, anomaly detection research, or radio signal analysis projects.</p>
       </div>
       <div class="glass-card contact-card fade-in">
-        <h3>Cloud Pilot Program</h3>
-        <p>Run AstroLens and MitraSETI at scale on managed GPU infrastructure. Contact us for pilot access.</p>
+        <h3>MitraSETI Cloud</h3>
+        <p>Run MitraSETI at scale on managed cloud infrastructure. <a href="https://mitraseti-dev.deepfieldlabs.dev" style="color:var(--accent-blue)">Start free</a> or contact us for team and institution plans.</p>
       </div>
       <div class="glass-card contact-card fade-in">
         <h3>Custom Development</h3>
